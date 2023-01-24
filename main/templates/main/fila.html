@@ -1,0 +1,34 @@
+{% extends 'main/base.html' %}
+{% load main_extras %}
+
+{% block title %}Fila{% endblock title %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="w80">
+            <div class="col-12">
+                <h1>Máquinas</h1>
+            </div>
+            <div class="col-12">
+                <form action="{% url 'instancia' %}" method="GET">
+                    <ul>
+                        {% for maq in maquinas|sortbyname %}
+                            <li>
+                                <input type="checkbox" name="maq_{{ maq.id }}" id="id_maq_{{ maq.id }}">
+                                <label for="id_maq_{{ maq.id }}">{{ maq.apelido }}</label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <hr>
+                    <ul>
+                        <li>
+                            <input type="checkbox" name="edicao" id="id_edicao">
+                            <label for="id_edicao">Modo Edição</label>
+                        </li>
+                    </ul>
+                    <button type="submit" class="btn btn-success">Abrir Fila</button>
+                </form>
+            </div>   
+        </div>
+    </div>
+{% endblock content %}

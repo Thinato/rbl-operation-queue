@@ -1,0 +1,76 @@
+{% extends 'main/base.html' %}
+{% load main_extras %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'main/form-style.css' %}">
+{% endblock head %}
+
+{% block title %}Novo Pedido{% endblock title %}
+
+{% block content %}
+    <div class="row justify-content-center"> 
+    <form action="" method="POST" id="form">
+        {% csrf_token %}
+        <h1>Novo Pedido</h1>
+        <div class="fieldWrapper">
+            <label for="id_codigo">Código:</label>
+            {{ form.codigo }}
+        </div>
+        <div class="fieldWrapper">
+            <label for="id_data_entrega">Data de Entrega:</label>
+            {{ form.data_entrega }}
+        </div>
+        <div id="itens">
+            <h1>Itens</h1>
+            <div class="row">
+                <div class="col-8">
+                    <h2>Cód. RBL</h2>
+                </div>
+                <div class="col-3">
+                    <h2>Qtd.</h2>
+                </div>
+            </div>
+            <div id="item" class="row">
+                <div class="col-8">
+                    {% if c %}
+                        {% for i in c %}
+                            <input type="text" name="cod_local_{{ i }}" id="id_cod_local_{{ i }}" value="{{ cods|index:i }}" required="">
+                        {% endfor %}
+                    {% else %}
+                        <input type="text" name="cod_local_0" id="id_cod_local_0" required="">
+                    {% endif %}
+                </div>
+                <div class="col-3">
+                    {% if c %}
+                        {% for i in c %}
+                            <input type="number" name="qtd_{{ i }}" id="id_qtd_{{ i }}" min="1" value="{{ qtds|index:i }}" class="input-qtd" pattern="[0-9]+" required="">
+                        {% endfor %}
+                    {% else %}
+                        <input type="number" name="qtd_0" id="id_qtd_0" min="1" value="1" class="input-qtd" pattern="[0-9]+" required="">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div>
+            <p class="message">{{ message }}</p>
+        </div>
+        <button type="button" id="adicionarItem" name="adicionarItem" value="adicionarItem" class="btn btn-secondary">Adicionar Item</button>
+        <button type="submit" name="salvar" value="salvar" class="btn btn-success btn-right">Salvar</button>
+
+    </form>
+</div>
+
+    <script>
+        var c=1;
+        $(document).ready(function() {
+            $('#adicionarItem').click(function() {
+                $('#item').append('<div class="col-8"><input type="text" id="id_cod_local_' + c + '" name="cod_local_' + c + '" required="" ></div>');
+                $('#item').append('<div class="col-3"><input type="number" id="id_qtd_' + c + '" name="qtd_' + c + '" min="1" value="1" class="input-qtd" pattern="[0-9]+" required=""></div> ');
+                $('#item').append('<div class="col-1"> <a><i class="fa fa-trash-o" aria-hidden="true"></i></a> </div>')
+                c++;
+            });
+          });
+    </script>
+
+{% endblock content %}

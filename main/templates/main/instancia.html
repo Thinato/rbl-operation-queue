@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+{% load static %}
+{% load main_extras %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'main/instancia-style.css' %}">
+
+    <title>
+        {% for maq in fila %}
+            {{maq.apelido}} -
+        {% endfor %}
+    </title>
+</head>
+    <body>
+        <script src="https://code.jquery.com/jquery-3.6.2.js" integrity="sha256-pkn2CUZmheSeyssYw3vMp1+xyub4m+e+QK4sQskvuo4=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+        <div id="content" name="content" class="main">
+            <div class="row w100">
+                {% for maq in fila %}
+                    <div class="col-3">
+                        <h1>{{ maq.apelido }}</h1>
+                        {% for fop in fila|get_values:maq %}
+                            {% with fop|get_op as op %}
+                                <div class="operacao {{ status|index:fop }}">
+                                    <ul class="two-col">
+                                        <li>Produto:</li>
+                                        <li>{{ op|get_peca }}</li>
+                                        <li>Operação:</li>
+                                        <li>{{ op.numero }}</li>
+                                        <li>Progresso:</li>
+                                        <li>{{ fop.quantidade_feita }}/{{ fop|get_quantidade }}</li>
+                                        {% comment %} <li>Previsão:</li>
+                                        <li>10:45 13/02</li> {% endcomment %}
+                                    </ul>
+                                    {% if edicao %}
+                                    <hr>
+                                        <form action="" method="post">
+                                            {% csrf_token %}
+                                            <select class="select-maq" name="maquina" id="id_maquina">
+                                                {% for op_maq in op|get_maquinas %}
+                                                    <option value="{{ op_maq.id }}" {% if fop.maquina == op_maq %} selected {% endif %} >{{ op_maq.apelido }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <button class="btn" type="submit" name="ok" value="{{ fop.id }}" >OK</button>
+                                            <button class="btn-order" type="submit" name="add_peso" value="{{ fop.id }}" ><i class="fa fa-sort-desc" aria-hidden="true"></i></button>
+                                            <button class="btn-order" type="submit" name="sub_peso" value="{{ fop.id }}" ><i class="fa fa-sort-asc" aria-hidden="true"></i></button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            {% endwith %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                
+            </div>
+            <form action="" method="post">
+                <button class="btn" type="submit" name="ajuste-auto" value="ajuste-auto">Ajuste Automático</button>
+            </form>
+      </div>
+    </body>
+</html>

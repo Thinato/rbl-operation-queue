@@ -1,0 +1,58 @@
+{% extends 'main/base.html' %}
+{% load main_extras %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'main/ops-style.css' %}">
+{% endblock head %}
+
+{% block title %}Pedidos{% endblock title %}
+
+{% block content %}
+    <div class="w80 center">
+    <h1 class="title">Pedidos</h1>
+    <a href="{% url 'novo_pedido' %}" class="btn btn-success novo-pedido">Novo</a>
+        <div class="row">
+            <div class="col-3">
+                <h2>Código</h2>
+            </div>
+            <div class="col-2">
+                <h2>Data de Entrega</h2>
+            </div>
+            <div class="col-3">
+                <h2>Status</h2>
+            </div>
+            <div class="col-1">
+                <h2>Progresso</h2>
+            </div>
+            <div class="col-3">
+                <h2>Ações</h2>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            {% for pedido in pedidos|orderby_data_entrega %}
+                <div class="col-3">
+                    <p>{{ pedido.codigo }}</p>
+                </div>
+                <div class="col-2">
+                    <p>{{ pedido.data_entrega }}</p>
+                </div>
+                <div class="col-3">
+                    {% if pedido.finalizado %}
+                        <p>Finalizado</p>
+                    {% else %}
+                        <p>Em andamento</p>
+                    {% endif %}
+                </div>
+                <div class="col-1">
+                    {{ progresso|index:pedido }}
+                </div>
+                <div class="col-3">
+                    [<a href="{% url 'atualizar_pedido' index=pedido.id %}">Atualizar</a>] [<a href="#">Editar</a>]
+                </div>
+            {% endfor %}
+        <hr class="hr-thin">
+        </div>
+    </div>
+{% endblock content %}

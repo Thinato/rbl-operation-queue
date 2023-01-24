@@ -1,0 +1,40 @@
+{% extends 'main/base.html' %}
+{% load main_extras %}
+
+{% block title %}Registro{% endblock title %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <h1 class="mt-2">Máquinas</h1>
+        <hr class="mt-0 mb-4">
+        <ul class="two-col">
+            {% for maquina in maquinas|sortbyname %}
+                <li> R$ {{maquina.custo_hora}}/h</li>
+                {% if maquina.apelido %}
+                    <li><b>{{maquina.apelido}}</b> [<a href="{% url 'editar_maquina' index=maquina.id %}">editar</a>]</li>
+                {% else %}
+                    <li><b>{{maquina.nome}}</b> [<a href="{% url 'editar_maquina' index=maquina.id %}">editar</a>]</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <a href="maquina" name="novaPeca" class="btn btn-success">Nova Máquina</a>
+        <br>
+        <br>
+        <hr class="mt-0 mb-4 blue-divider">
+        <h1 class="mt-2">Peças</h1>
+        <hr class="mt-0 mb-4">
+        <form action="{% url 'search' %}" method="GET">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <input type="search" name="search" placeholder="Pesquisar" class="form-control me-2">
+                    <button type="submit" class="btn btn-success">Pesquisar</button>
+                </div>
+            </div>
+        </form>
+        <a href="nova_peca" name="novaPeca" class="btn btn-success">Nova Peça</a>
+    </div>
+</div>
+
+{% endblock content %}

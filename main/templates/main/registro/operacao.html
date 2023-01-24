@@ -1,0 +1,102 @@
+{% extends 'main/base.html' %}
+{% load main_extras %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'main/ops-style.css' %}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+{% endblock head %}
+
+{% block title %}Operação{% endblock title %}
+
+{% block content %}
+    <h1 class="title">Operações de {{peca.cod_local}} - {{peca.cod_estrangeiro}}</h1>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-2">
+                    <h2>Número</h2>
+                </div>
+                <div class="col-2">
+                    <h2>Tempo Prod. (seg.)*</h2>
+                </div>
+                <div class="col-2">
+                    <h2>Ajuste (min.)</h2>
+                </div>
+                <div class="col-6">
+                    <h2>Máquinas</h2>
+                </div>
+            </div>
+            <hr>
+
+            {% for op in operacoes %}
+                <div class="operacao row">
+                    <div class="col-2">
+                        <label for="id_op_n">OP. <b>{{ op.numero }}</b>:</label>
+                    </div>
+                    <div class="col-2">
+                        <input class="soma" onblur="findTotal()" type="number" name="t_producao{{op.numero}}" id="" min="0" value="{{op.tempo_producao}}">
+                    </div>
+                    <div class="col-2">
+                        <input class="soma_min" onblur="findTotal()" type="number" name="t_ajuste{{op.numero}}" id="" min="0" value="{{op.tempo_ajuste|over_floor:60}}">
+                    </div>
+                    <div class="col-6">
+                        <ul class="list-maquinas">  
+                            {% for maq in maquinas|sortbyname %}
+                                <li>
+                                    {% if maq.id in op_maq_list|keyvalue:op.numero %}
+                                        <input class="check-maquina" type="checkbox" value="clicked" name="op{{op.numero}}_maq{{maq.id}}" id="op{{op.numero}}_maq{{maq.id}}" checked>
+                                    {% else %}
+                                        <input class="check-maquina" type="checkbox" value="clicked" name="op{{op.numero}}_maq{{maq.id}}" id="op{{op.numero}}_maq{{maq.id}}">
+                                    {% endif %} 
+                                    <label class="label-maquina" for="op{{op.numero}}_maq{{maq.id}}">{{maq.apelido}}</label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+            {% endfor %}
+            <div class="row">
+                <div class="col-8">
+                    <h3 id="total">Total: 59:59</h3>
+                </div>
+                <div class="col-4">
+                    <button type="submit" name="salvar" value="salvar" class="btn btn-success">Salvar</button>
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            const zeroPad = (num, places) => String(num).padStart(places, '0')
+            function findTotal(){
+                var arr = document.getElementsByClassName('soma');
+                var arr_min = document.getElementsByClassName('soma_min');
+                var tot=0;
+                for(var i=0;i<arr.length;i++){
+                    if(parseInt(arr[i].value))
+                        tot += parseInt(arr[i].value);
+                }
+                for(var i=0;i<arr_min.length;i++){
+                    if(parseInt(arr_min[i].value))
+                        tot += parseInt(arr_min[i].value) * 60;
+                }
+                sec = tot % 60;
+                minute = parseInt((tot % 3600) / 60);
+                hour = parseInt(tot / 3600);    
+                console.log(hour)
+                tot_txt = "";
+                if(hour<1) {
+                    tot_txt = minute + ":" + zeroPad(sec, 2);
+                } else {
+                    tot_txt = hour + ":" + zeroPad(minute, 2) + ":" + zeroPad(sec, 2);
+                }
+                
+                document.getElementById('total').innerHTML = "Total: " + tot_txt;
+            }   
+            var intervalId = window.setInterval(function(){
+                findTotal()
+              }, 500);
+        </script>
+            
+{% endblock content %}

@@ -1,0 +1,21 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Registro{% endblock title %}
+
+{% block content %}
+
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <input type="text" value="{{searched}}">
+            <br>
+            {% for peca in pecas %}
+                <div class="search-result">
+                    <a href="{% url 'editar_peca' index=peca.cod_local  %}">RBL: {{ peca.cod_local }} | Est.: {{ peca.cod_estrangeiro }}</a>
+                    <a href="{% url 'operacoes' index=peca.cod_local %}" class="ops">[Operações]</a>
+                    <p>{{ peca.descricao }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock content %}

@@ -1,0 +1,28 @@
+{% extends 'main/base.html' %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'main/form-style.css' %}">{% endblock head %}
+
+{% block title %}Nova Máquina{% endblock title %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <form action="" method="post" class="config">
+            {% csrf_token %}
+            <div class="fieldWrapper">
+                <label for="id_nome">Nome*:</label>
+                {{ form.nome }}
+            </div>
+            <div class="fieldWrapper">
+                <label for="id_apelido">Apelido:</label> 
+                {{ form.apelido }}
+            </div>
+            <div class="fieldWrapper">
+                <label for="id_custo_hora">Custo/Hora:</label>
+                {{ form.custo_hora }}
+            </div>
+            <button type="submit" name="salvar" value="salvar" class="btn btn-success">Salvar</button>
+        </form>
+    </div>
+{% endblock content %}

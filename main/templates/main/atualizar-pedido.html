@@ -1,0 +1,49 @@
+{% extends 'main/base.html' %}
+{% load main_extras %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'main/form-style.css' %}">
+{% endblock head %}
+
+{% block title %}Pedidos{% endblock title %}
+
+{% block content %}
+    <div class="row justify-center w60">
+        <div class="col-4 center">
+            OP
+        </div>
+        <div class="col-4 center">
+            Quantidade feita
+        </div>
+        <div class="col-4 center">
+            Quantidade feita
+        </div>
+    </div>
+    <div class="row justify-center">
+        <form action="" method="post" class="w60">
+            {% csrf_token %}
+            {% for fop in fops %}
+                <div class="row">
+                    <div class="col-4 center">
+                        <label for="fop-{{fop.id}}">{{ fop.operacao.peca.cod_local }} - {{ fop.operacao.numero }}</label>
+                    </div>
+                    <div class="col-4 center">
+                        <input type="text" id="fop-{{fop.id}}" name="fop-{{fop.id}}" value="{{ fop.quantidade_feita }}">
+                    </div>
+                    <div class="col-4 d-flex">
+                        <label for="fop-{{fop.id}}">/ {{ fop|get_quantidade }}</label>
+                    </div>
+                </div>
+            {% endfor %}
+            {% if msg %}
+                <p style="color:red;" class="center">
+                    {{ msg }}
+                </p>
+            {% endif %}
+            <button type="submit" class="btn btn-success">Atualizar</button>
+        </form>
+    </div>
+{% endblock content %}
+
+

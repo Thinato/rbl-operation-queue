@@ -1,0 +1,38 @@
+{% extends 'main/base.html' %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'main/form-style.css' %}">{% endblock head %}
+
+{% block title %}Nova Peça{% endblock title %}
+
+
+{% block content %}
+    <div class="row justify-content-center">
+        <form action="" method="post" class="config">
+            {% csrf_token %}
+            <div class="fieldWrapper">
+                <label for="id_codigo_rbl">Código Rbl:</label>
+                {{ form.codigo_local }}
+            </div>
+            <div class="fieldWrapper">
+                <label for="id_codigo_estrangeiro">Código Estrangeiro*:</label>
+                {{ form.codigo_estrangeiro }}
+            </div>
+            <div class="fieldWrapper">
+                <label for="id_qtd_operacoes">Quantidade de Operações*:</label> 
+                {{ form.qtd_operacoes }}
+            </div>
+            <div class="fieldWrapper">
+                <label for="id_descricao">Descrição:</label>
+                {{ form.descricao }}
+            </div>
+            {% if message %}
+                <div class="message">
+                    <p>{{ message }}</p>
+                </div>
+            {% endif %}
+            <button type="submit" name="salvar" value="salvar" class="btn btn-success">Salvar</button>
+        </form>
+    </div>
+{% endblock content %}
